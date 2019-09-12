@@ -23,7 +23,7 @@ if __name__ == "__main__":
     print("X=7.0\tY=%f" % y2)
     Y = np.dot(x, Theta)
     # plot
-    plt.figure()
+    plt.figure('Linear Regression')
     plt.plot(x[:, 1], y, '.')
     plt.plot(x[:, 1], Y)
     plt.xlabel('Age in years')
