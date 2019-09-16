@@ -28,8 +28,8 @@ def gradient_descent(X, Y, theta, learning_rate=0.07, max_iteration=1500):
 
 
 def task5():
-    x = np.loadtxt('data/ex1_2x.dat')
-    y = np.loadtxt('data/ex1_2y.dat').reshape(-1, 1)
+    x = np.loadtxt('exp1/data/ex1_2x.dat')
+    y = np.loadtxt('exp1/data/ex1_2y.dat').reshape(-1, 1)
     m = x.shape[0]
     # 将x标准化
     x = scale(x)
@@ -46,8 +46,8 @@ def task5():
 
 
 if __name__ == "__main__":
-    x = np.loadtxt('data/ex1_1x.dat').reshape(-1, 1)
-    y = np.loadtxt('data/ex1_1y.dat').reshape(-1, 1)
+    x = np.loadtxt('exp1/data/ex1_1x.dat').reshape(-1, 1)
+    y = np.loadtxt('exp1/data/ex1_1y.dat').reshape(-1, 1)
     m = x.shape[0]
     x = np.hstack((np.ones((m, 1)), x))
     m, n = x.shape
