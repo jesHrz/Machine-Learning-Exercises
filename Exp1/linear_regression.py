@@ -34,18 +34,17 @@ def task5():
     y = np.loadtxt('exp1/data/ex1_2y.dat').reshape(-1, 1)
 
     # 将x标准化
+    x = np.vstack((x, [[1650, 3]]))
     x = scale(x)
     x = np.hstack((np.ones((x.shape[0], 1)), x))
 
     n = x.shape[1]
-    max_iteration = 500
-    Theta, cost, _theta = gradient_descent(x, y, np.zeros(
-        (n, 1)), learning_rate=0.015, max_iteration=max_iteration)
+    max_iteration = 50
+    Theta, cost, _theta = gradient_descent(x[0: x.shape[0] - 1], y, np.zeros((n, 1)),
+                                           learning_rate=0.15, max_iteration=max_iteration)
     print("Theta =", Theta.transpose())
 
-    xx = [[1650, 3]]
-    xx = np.hstack((np.ones((1, 1)), xx))
-    print("prediction[1650, 3] =", np.dot(Theta.transpose(), xx.transpose()))
+    print("prediction[1650, 3] =", np.dot(Theta.transpose(), x[x.shape[0] - 1].transpose()))
 
     # 每次迭代损失函数的值
     plt.figure('cost')
@@ -70,6 +69,7 @@ if __name__ == "__main__":
 
     m, n = x.shape
     Theta, cost, _theta = gradient_descent(x, y, np.zeros((n, 1)))
+    print("Theta =", Theta.transpose())
 
     # 对x=3.5和x=7做预测
     y1 = np.dot([1, 3.5], Theta)

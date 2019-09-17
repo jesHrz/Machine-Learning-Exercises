@@ -6,7 +6,7 @@
 
 3. 绘制 $\theta_0 - \theta_1 - J$ 的函数图像。
 
-4. 对第二组数据`ex1_2x.dat`与`ex1_2y.dat`中的x矩阵做标准化处理，调整学习率`learning_rate`使每次迭代计算出的损失函数较优，结果见`result2.png` 。
+4. 对第二组数据`ex1_2x.dat`与`ex1_2y.dat`中的x矩阵做标准化处理，调整学习率`learning_rate`使每次迭代计算出的损失函数较优，结果见`2_cost.png` 。
 
 ### matplotlib.pyplot 绘图
 
@@ -45,3 +45,7 @@
 `std(x, axis)` 沿第axis个变量的方向求标准差
 
 `mean(x, axis)` 沿第axis个变量的方向求平均值
+
+`a[x:y]` 取矩阵a第x-1行到第y-1行
+
+`a[[x,y]]` 取矩阵a第x-1行和第y-1行
