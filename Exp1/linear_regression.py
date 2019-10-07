@@ -102,11 +102,11 @@ if __name__ == "__main__":
     theta_0, theta_1 = np.meshgrid(theta_0, theta_1)
 
     # 三维图
-    # Axes3D(fig2).plot_surface(theta_0, theta_1, j_vals)
+    Axes3D(fig2).plot_surface(theta_0, theta_1, j_vals)
     # 等高线
-    plt.contourf(theta_0, theta_1, j_vals, 40, alpha=0.8)
-    cb = plt.colorbar()
-    cb.set_label('J')
+    # plt.contourf(theta_0, theta_1, j_vals, 40, alpha=0.8)
+    # cb = plt.colorbar()
+    # cb.set_label('J')
     plt.xlabel('theta_0')
     plt.ylabel('theta_1')
     plt.show()
