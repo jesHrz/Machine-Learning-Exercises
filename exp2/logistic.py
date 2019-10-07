@@ -139,9 +139,9 @@ if __name__ == '__main__':
     exe1 梯度下降法 C++计算结果，Python可视化
     '''
     # # w, theta, iteration = fit(feature, label, 0.0012)
-    # result_file = ["0.000900.txt", "0.001200.txt", "0.001500.txt", "0.001800.txt", "0.001900.txt", "0.002000.txt", "0.002500.txt"]
-    # for file in result_file:
-    #     plot_fit(feature, label, filename="exp2/data/"+file)
+    result_file = ["0.000900.txt", "0.001200.txt", "0.001500.txt", "0.001800.txt", "0.001900.txt", "0.002000.txt", "0.002500.txt"]
+    for file in result_file:
+        plot_fit(feature, label, filename="exp2/data/"+file)
 
     '''
     exe2 牛顿迭代
