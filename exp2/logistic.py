@@ -9,10 +9,6 @@ def J(feature, label, weights):
     m = np.shape(feature)[0]
     for i in range(m):
         h = sig(feature[i] * weights)
-        if h <= 0:
-            h = 0.0000001
-        elif h >= 1:
-            h = 0.9999999
         ret += -label[i, 0] * np.log(h) - (1 - label[i, 0]) * np.log(1 - h)
     return ret / m
 
@@ -49,7 +45,6 @@ def load_result(filename):
 # 梯度下降 太慢
 def fit(feature, label, alpha, epsilon=1e-7):
     m, n = np.shape(feature)
-    # w = np.mat([-4.96253179, 0.07103084, 0.03521583]).T
     w = np.mat(np.zeros((n, 1)))
     val = 0
     iteration = 0
@@ -125,8 +120,7 @@ def newton(feature, label, epsilon=1e-6):
             H += (h * (1 - h))[0, 0] * feature[i].T * feature[i]
         err = label - sig(feature * w)
         w = w + H.I * feature.T * err
-        last = val
-        val = J(feature, label, w)
+        last, val = val, J(feature, label, w)
         cost.append(val[0, 0])
         if abs(val - last) < epsilon:
             break
@@ -138,10 +132,10 @@ if __name__ == '__main__':
     '''
     exe1 梯度下降法 C++计算结果，Python可视化
     '''
-    # # w, theta, iteration = fit(feature, label, 0.0012)
-    # result_file = ["0.000900.txt", "0.001200.txt", "0.001500.txt", "0.001800.txt", "0.001900.txt", "0.002000.txt", "0.002500.txt"]
-    # for file in result_file:
-    #     plot_fit(feature, label, filename="exp2/data/"+file)
+    # w, theta, iteration = fit(feature, label, 0.0012)
+    result_file = ["0.000900.txt", "0.001200.txt", "0.001500.txt", "0.001800.txt", "0.001900.txt", "0.002000.txt", "0.002500.txt"]
+    for file in result_file:
+        plot_fit(feature, label, filename="exp2/data/"+file)
 
     '''
     exe2 牛顿迭代

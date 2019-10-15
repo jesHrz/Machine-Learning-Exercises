@@ -63,7 +63,7 @@ vector<db> fit(db alpha) {
         last = val;
         val = cal();
         cost.push_back(val);
-        // LOG(iteration, val - last);
+        LOG(val - last);
         if (fabs(val - last) <= eps)	break;
     }
     return cost;
@@ -84,7 +84,7 @@ int main() {
     // for (int i = 0; i < 80; ++i) {
     //     cout << x[i][0] << ' ' << x[i][1] << ' ' << x[i][2] << ' ' << y[i] << endl;
     // }
-    db alpha = 0.002;
+    db alpha = 0.01;
     vector<db> ret = fit(alpha);
     LOG(alpha, w[0], w[1], w[2]);
     // string name = "data/" + to_string(alpha) + ".txt";
