@@ -63,14 +63,16 @@ def hessian(feature, label, theta, lamb):
 
 def newton(feature, label, lamb, epsilon=1e-6):
     val = 0
+    iteration = 0
     n = np.shape(feature)[1]
     w = np.mat(np.zeros((n, 1)))
     while True:
+        iteration += 1
         H = hessian(feature, label, w, lamb)
         dJ = gradient(feature, label, w, lamb)
         w = w - H.I * dJ
         last, val = val, cost(feature, label, w, lamb)
-        print(val)
+        print("iteration=", iteration, val)
         if abs(last - val) <= epsilon:
             break
     return w
@@ -114,7 +116,8 @@ if __name__ == '__main__':
     lamb = [0, 1, 10]
     for i in range(len(lamb)):
         theta = newton(_feature, label, lamb[i])
-        print(theta.T)
+        print("theta=", theta.T)
+        print("norm=", np.linalg.norm(theta))
         ax = plt.subplot(1, len(lamb), i + 1)
         ax.set_title("%.3f" % lamb[i])
         plt_logistic(feature, label, theta)

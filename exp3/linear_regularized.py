@@ -18,9 +18,10 @@ def load_data():
             label.append(label_tmp)
     return np.mat(feature), np.mat(label)
 
-def plt_linear(feature, label, theta):
+def plt_linear(feature, label, theta, lamb):
     import matplotlib.pyplot as plt
     plt.figure()
+    plt.title("%.4f" % lamb)
     plt.scatter(feature[:, 1].tolist(), label.tolist(), marker='o')
     x = np.arange(min(feature[:, 1]), max(feature[:, 1]), 0.01)
     y = []
@@ -43,4 +44,4 @@ if __name__ == '__main__':
         theta = (feature.T * feature + lam * E).I * feature.T * label
         print("lambda=", lam)
         print(theta.T)
-        plt_linear(feature, label, theta)
+        plt_linear(feature, label, theta, lam)
