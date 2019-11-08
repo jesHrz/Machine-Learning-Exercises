@@ -57,7 +57,7 @@ def random_test(feature, label, num):
         pos = random.randint(0, n - 1)
         while pos in vis:
             pos = random.randint(0, n - 1)
-        laplace[pos] = 1
+        vis[pos] = 1
         feature_select.append(feature[pos].tolist()[0])
         label_select.append(label[pos].tolist()[0])
     return np.mat(feature_select), np.mat(label_select)
