@@ -1,10 +1,10 @@
 function strimage(n)
-  fidin = fopen('train-01-images.svm'); % ´ò¿ªtest2.txtÎÄ¼þ 
+  fidin = fopen('train-01-images.svm'); % æ‰“å¼€test2.txtæ–‡ä»¶ 
   i = 1
   apres = []
 
 while ~feof(fidin)
-  tline = fgetl(fidin); % ´ÓÎÄ¼þ¶ÁÐÐ 
+  tline = fgetl(fidin); % ä»Žæ–‡ä»¶è¯»è¡Œ 
   apres{i} = tline;
   i = i+1;
 end
@@ -21,7 +21,7 @@ end
   
   grid = [];
   grid(784) = 0;
-  for i=2:2:lenxy  %% ¸ôÒ»¸öÊý
+  for i=2:2:lenxy  %% éš”ä¸€ä¸ªæ•°
       if(xy(i)<=0)
           break
       end

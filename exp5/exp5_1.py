@@ -19,9 +19,14 @@ class SVM:
     def linear_kernel(x1, x2):
         return np.dot(x1, x2)
 
-    def __init__(self, kernel=None, C=None):
+    @staticmethod
+    def RBF_kernel(x1, x2, gama):
+        return np.exp(-gama*np.dot(x1-x2, x1-x2))
+
+    def __init__(self, kernel=None, C=None, **kargcs):
         self.kernel = SVM.linear_kernel if kernel is None else kernel
         self.C = C if C is None else float(C)
+        self.kargcs = kargcs
 
     def fit(self, X, y):
         m, n = X.shape
@@ -29,7 +34,7 @@ class SVM:
         K = np.zeros((m, m))
         for i in range(m):
             for j in range(m):
-                K[i, j] = self.kernel(X[i], X[j])
+                K[i, j] = self.kernel(X[i], X[j], **self.kargcs)
 
         P = cvxopt.matrix(np.outer(y, y) * K)
         q = cvxopt.matrix(np.ones(m) * -1)
@@ -37,7 +42,7 @@ class SVM:
         A = cvxopt.matrix(y, (1, m))
         b = cvxopt.matrix(0.0)
 
-        if self.C is None:  # hard-margin
+        if self.C is None or self.C == 0:  # hard-margin
             # a >= 0
             G = cvxopt.matrix(np.eye(m) * -1)
             h = cvxopt.matrix(np.zeros(m))
@@ -85,7 +90,7 @@ class SVM:
         y_predict = np.zeros(len(X))
         for j in range(len(X)):
             for i in range(len(self.a)):
-                y_predict[j] += self.a[i] * self.sv_y[i] * self.kernel(X[j], self.sv[i])
+                y_predict[j] += self.a[i] * self.sv_y[i] * self.kernel(X[j], self.sv[i], **self.kargcs)
         return y_predict + self.b
 
     def predict(self, X):
@@ -97,9 +102,9 @@ def plot_margin(X, y, clf):
         return (-w[0] * x - b + c) / w[1]
     X1 = X[y == 1]
     X2 = X[y == -1]
-    plt.scatter(clf.sv[:, 0], clf.sv[:, 1], s=100, c="r")
+    plt.scatter(clf.sv[:, 0], clf.sv[:, 1], c="r", label="Support vector")
     plt.plot(X1[:, 0], X1[:, 1], "+", label="Positive")
-    plt.plot(X2[:, 0], X2[:, 1], "o", label="Negative")
+    plt.plot(X2[:, 0], X2[:, 1], "x", label="Negative")
 
     a0 = np.min(X)
     b0 = np.max(X)
@@ -107,7 +112,7 @@ def plot_margin(X, y, clf):
     # w'x+b=0
     a1 = f(clf.w, a0, clf.b)
     b1 = f(clf.w, b0, clf.b)
-    plt.plot([a0, b0], [a1, b1], "k", label="Hyperplane")
+    plt.plot([a0, b0], [a1, b1], "k")
 
     # w'x+b=1
     a1 = f(clf.w, a0, clf.b, 1)
@@ -119,27 +124,60 @@ def plot_margin(X, y, clf):
     b1 = f(clf.w, b0, clf.b, -1)
     plt.plot([a0, b0], [a1, b1], "k--")
 
-    plt.title("SVM")
+    plt.title("SVM - Linear")
     plt.axis("tight")
     plt.legend()
     plt.show()
 
 
-def SVM_test(X_train, y_train, X_test=None, y_test=None, kernel=None, C=None):
-    clf = SVM(kernel=kernel, C=C)
+def plot_contour(X, y, clf):
+    X1 = X[y == 1]
+    X2 = X[y == -1]
+    plt.scatter(clf.sv[:, 0], clf.sv[:, 1], c="r", label="Support vector")
+    plt.plot(X1[:, 0], X1[:, 1], "+", label="Positive")
+    plt.plot(X2[:, 0], X2[:, 1], "x", label="Negative")
+
+    a0 = np.min(X)
+    b0 = np.max(X)
+
+    x1, x2 = np.meshgrid(np.linspace(a0, b0, 50), np.linspace(a0, b0, 50))
+    x = np.array([[p1, p2] for p1, p2 in zip(np.ravel(x1), np.ravel(x2))])
+    z = clf.project(x).reshape(x1.shape)
+
+    plt.contour(x1, x2, z, [0.0], colors='k', linewidths=1, origin='lower')
+    # plt.contour(x1, x2, z + 1, [0.0], colors='grey', linewidths=1, origin='lower')
+    # plt.contour(x1, x2, z - 1, [0.0], colors='grey', linewidths=1, origin='lower')
+
+    plt.title("SVM - Nonlinear")
+    plt.axis("tight")
+    plt.legend()
+    plt.show()
+
+
+def linear_test():
+    X_train, y_train = load_data("exp5/data/training_1.txt")
+    X_test, y_test = load_data("exp5/data/test_1.txt")
+
+    clf = SVM(C=10)
     clf.fit(X_train, y_train)
 
-    if X_test is not None and y_test is not None:
-        print("Test data found.")
-        y_predict = clf.predict(X_test)
-        correct = np.sum(y_predict == y_test)
-        print("%d out of %d predictions correct(%.2f%%)." % (correct, len(y_test), correct / len(y_test) * 100))
+    y_predict = clf.predict(X_test)
+    correct = np.sum(y_predict == y_test)
+    print("%d out of %d predictions correct(%.2f%%)." % (correct, len(y_test), correct / len(y_test) * 100))
+    
+    plot_margin(X_train, y_train, clf)
 
-    return clf
+
+def nonlinear_test():
+    X_train, y_train = load_data("exp5/data/training_3.txt")
+
+    clf = SVM(kernel=SVM.RBF_kernel, gama=10)
+    clf.fit(X_train, y_train)
+    
+    plot_contour(X_train, y_train, clf)
+
 
 
 if __name__ == "__main__":
-    X_train, y_train = load_data("exp5/data/training_2.txt")
-    X_test, y_test = load_data("exp5/data/test_1.txt")
-    clf = SVM_test(X_train, y_train)
-    plot_margin(X_train, y_train, clf)
+    linear_test()
+    nonlinear_test()
