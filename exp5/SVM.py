@@ -8,8 +8,8 @@ class SVM:
         return np.dot(x1, x2)
 
     @staticmethod
-    def RBF_kernel(x1, x2, gama):
-        return np.exp(-gama*np.dot(x1-x2, x1-x2))
+    def RBF_kernel(x1, x2, gamma):
+        return np.exp(-gamma*np.dot(x1-x2, x1-x2))
 
     def __init__(self, kernel=None, C=None, **kargcs):
         self.kernel = SVM.linear_kernel if kernel is None else kernel
@@ -18,6 +18,7 @@ class SVM:
 
     def fit(self, X, y):
         m, n = X.shape
+        print("overall %d training datas" % m)
 
         K = np.zeros((m, m))
         for i in range(m):
@@ -25,6 +26,7 @@ class SVM:
                 K[i, j] = self.kernel(X[i], X[j], **self.kargcs)
 
         P = cvxopt.matrix(np.outer(y, y) * K)
+        # P = cvxopt.matrix(np.dot(np.dot(y, y.transpose()), K))
         q = cvxopt.matrix(np.ones(m) * -1)
         # sigma(a*y)=0
         A = cvxopt.matrix(y, (1, m))
@@ -47,39 +49,39 @@ class SVM:
 
         a = np.ravel(solution['x'])
         # 非0的a对应支持向量
-        sv = a > 1e-5
+        sv = a > 0
         # 支持向量对应下标
-        ind = np.arange(len(a))[sv]
+        self.support_ = np.arange(len(a))[sv]
         self.a = a[sv]
-        self.sv = X[sv]
-        self.sv_y = y[sv]
-        print("%d support vectors out of %d points" % (len(self.a), m))
+        self.support_vectors_ = X[sv]
+        self.support_vectors_y = y[sv]
+        print("%d support vectors out of %d points." % (len(self.a), m))
 
         if self.kernel == SVM.linear_kernel:    # 线性可分
             self.w = np.zeros(n)
             for i in range(len(self.a)):
-                self.w += self.a[i] * self.sv_y[i] * self.sv[i]
+                self.w += self.a[i] * self.support_vectors_y[i] * self.support_vectors_[i]
             self.b = 0
             for i in range(len(self.a)):
-                self.b += self.sv_y[i] - np.dot(self.w, self.sv[i])
+                self.b += self.support_vectors_y[i] - np.dot(self.w, self.support_vectors_[i])
             self.b /= len(self.a)
         else:   # 非线性
             self.w = None
             self.b = 0
             for i in range(len(self.a)):
-                self.b += self.sv_y[i]
-                self.b -= np.sum(self.a * self.sv_y * K[ind[i], sv])
+                self.b += self.support_vectors_y[i]
+                self.b -= np.sum(self.a * self.support_vectors_y * K[self.support_[i], sv])
             self.b /= len(self.a)
 
-    def project(self, X):
+    def decision_function(self, X):
         if self.w is not None:  # 线性可分
             return np.dot(X, self.w) + self.b
 
-        y_predict = np.zeros(len(X))
+        y_decision = np.zeros(len(X))
         for j in range(len(X)):
             for i in range(len(self.a)):
-                y_predict[j] += self.a[i] * self.sv_y[i] * self.kernel(X[j], self.sv[i], **self.kargcs)
-        return y_predict + self.b
+                y_decision[j] += self.a[i] * self.support_vectors_y[i] * self.kernel(X[j], self.support_vectors_[i], **self.kargcs)
+        return y_decision + self.b
 
     def predict(self, X):
-        return np.sign(self.project(X))
+        return np.sign(self.decision_function(X))
