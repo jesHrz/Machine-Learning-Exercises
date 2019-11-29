@@ -64,7 +64,7 @@ def linear_test():
     X_train, y_train = load_data("exp5/data/training_1.txt")
     X_test, y_test = load_data("exp5/data/test_1.txt")
 
-    clf = SVM(C=1e-10)
+    clf = SVM(C=1e-9)
     clf.fit(X_train, y_train)
 
     y_predict = clf.predict(X_test)
@@ -78,9 +78,8 @@ def linear_test():
 def nonlinear_test():
     X_train, y_train = load_data("exp5/data/training_3.txt")
 
-    clf = SVM(kernel=SVM.RBF_kernel, gamma=500)
+    clf = SVM(kernel=SVM.RBF_kernel, gamma=10000)
     clf.fit(X_train, y_train)
-
     plot_contour(X_train, y_train, clf)
 
 
