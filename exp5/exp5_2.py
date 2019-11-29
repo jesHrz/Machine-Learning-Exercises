@@ -1,6 +1,6 @@
 import numpy as np
+import random
 from SVM import SVM
-from sklearn import svm
 
 
 def load_data(file):
@@ -18,13 +18,23 @@ def load_data(file):
     return np.array(X), np.array(y)
 
 
+def random_sample(X, y, k):
+    ind = random.sample([i for i in range(len(X))], k)
+    X_random = []
+    y_random = []
+    for i in ind:
+        X_random.append(X[i])
+        y_random.append(y[i])
+    return np.array(X_random), np.array(y_random), ind
+
+
 if __name__ == "__main__":
     X_train, y_train = load_data("exp5/data/train-01-images.svm")
     X_test, y_test = load_data("exp5/data/test-01-images.svm")
+    X_train, y_train, ind = random_sample(X_train, y_train, 3000)
 
-    clf = SVM()
-    # clf = svm.SVC(kernel="linear", C=1e-8)
-    clf.fit(X_train[1000:4000], y_train[1000:4000])
+    clf = SVM(C=1e-10)
+    clf.fit(X_train, y_train)
 
     y_predict = clf.predict(X_train)
     correct = np.sum(y_predict == y_train)

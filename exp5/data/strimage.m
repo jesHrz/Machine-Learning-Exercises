@@ -25,7 +25,7 @@ end
       if(xy(i)<=0)
           break
       end
-    grid(xy(i-1)) = 255;
+    grid(xy(i-1)) = xy(i) * 100 / 255;
   end
   grid1 = reshape(grid,28,28);
   grid1 = fliplr(diag(ones(28,1)))*grid1;
