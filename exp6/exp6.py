@@ -52,7 +52,7 @@ if __name__ == "__main__":
         return image
 
     bird = matplotlib.image.imread("exp6/data/bird_small.tiff")
-    bird = np.array(bird, dtype=np.float64) / 255
+    bird = np.array(bird, dtype=np.uint)
     m, n, channel = np.shape(bird)
 
     kmeans = KMeans(n_clusters=16, max_iter=50)
