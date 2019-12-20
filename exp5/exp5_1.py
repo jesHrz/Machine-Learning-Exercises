@@ -84,5 +84,5 @@ def nonlinear_test():
 
 
 if __name__ == "__main__":
-    # linear_test()
+    linear_test()
     nonlinear_test()

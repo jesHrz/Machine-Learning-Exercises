@@ -25,9 +25,9 @@ class SVM:
             for j in range(m):
                 K[i, j] = self.kernel(X[i], X[j], **self.kargcs)
 
-        # P = cvxopt.matrix(np.outer(y, y) * K)
-        print((y.T*y).shape)
-        P = cvxopt.matrix(y.T*y*K)
+        P = cvxopt.matrix(np.outer(y, y) * K)
+        # print(y.shape)
+        # P = cvxopt.matrix(y.T*y*K)
         q = cvxopt.matrix(np.ones(m) * -1)
         # sigma(a*y)=0
         A = cvxopt.matrix(y, (1, m))

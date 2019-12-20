@@ -1,3 +1,5 @@
 .vscode
 **/*.exe
 */__pycache__
+exp7/eig_val.txt
+exp7/eig_vec.txt
