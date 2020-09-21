@@ -1,4 +1,4 @@
-# Machine-Learing
+# Machine Learning
 
 ## Linear Regression - 0912
 
